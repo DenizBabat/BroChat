@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "1048792826453",
+    "firebase_url": "https://babatmanchat.firebaseio.com",
+    "project_id": "babatmanchat",
+    "storage_bucket": "babatmanchat.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1048792826453:android:4f770cd567ab6fb3",
+        "android_client_info": {
+          "package_name": "com.babat.deniz.brochat"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1048792826453-nkfat78gpaosfjsi20rttnmofsd69gaa.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.babat.deniz.brochat",
+            "certificate_hash": "394355ff74bf9d3f4b3e3e0edc0eb9de8485b0ea"
+          }
+        },
+        {
+          "client_id": "1048792826453-chk10ns0tr7o50pn9uq3403s0f0g52j6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBS9bcdFwVP2sqcSvkJa2MMo9TEH7D9OPQ"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1048792826453-chk10ns0tr7o50pn9uq3403s0f0g52j6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
