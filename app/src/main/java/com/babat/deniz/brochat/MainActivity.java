@@ -32,6 +32,42 @@ public class MainActivity extends AppCompatActivity {
 
 
     @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        activity_main = findViewById(R.id.activity_main);
+        fab = findViewById(R.id.fab);
+
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                EditText input = findViewById(R.id.input);
+                FirebaseDatabase.getInstance().getReference().push().setValue(new ChatMessage(input.getText().toString(),
+                        FirebaseAuth.getInstance().getCurrentUser().getEmail()));
+                input.setText("");
+            }
+        });
+
+
+        //check if not sign-in then navigate signin page
+
+        if (FirebaseAuth.getInstance().getCurrentUser() == null)
+        {
+            startActivityForResult(AuthUI.getInstance().createSignInIntentBuilder().build(), SIGN_IN_REQUEST_CODE);
+
+        }
+        else{
+            Snackbar.make(activity_main,"welcome "+FirebaseAuth.getInstance().getCurrentUser().getEmail(),Snackbar.LENGTH_SHORT).show();
+            //load content
+            displayChatMessage();
+        }
+
+    }
+
+
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.menu_sign_out)
         {
@@ -66,39 +102,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
 
-        activity_main = findViewById(R.id.activity_main);
-        fab = findViewById(R.id.fab);
-
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                EditText input = findViewById(R.id.input);
-                FirebaseDatabase.getInstance().getReference().push().setValue(new ChatMessage(input.getText().toString(),
-                        FirebaseAuth.getInstance().getCurrentUser().getEmail()));
-                input.setText("");
-            }
-        });
-
-
-        //check if not sign-in then navigate signin page
-
-        if (FirebaseAuth.getInstance().getCurrentUser() == null)
-        {
-            startActivityForResult(AuthUI.getInstance().createSignInIntentBuilder().build(), SIGN_IN_REQUEST_CODE);
-
-        }
-        else{
-            Snackbar.make(activity_main,"welcome "+FirebaseAuth.getInstance().getCurrentUser().getEmail(),Snackbar.LENGTH_SHORT).show();
-            //load content
-            displayChatMessage();
-        }
-
-    }
 
     private void displayChatMessage() {
         ListView listOfMessage = findViewById(R.id.list_of_message);
