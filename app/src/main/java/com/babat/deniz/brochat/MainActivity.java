@@ -30,6 +30,7 @@ import hani.momanii.supernova_emoji_library.Helper.EmojiconTextView;
 
 public class MainActivity extends AppCompatActivity {
 
+    //commit test
     private static int SIGN_IN_REQUEST_CODE = 1;
     private FirebaseListAdapter<ChatMessage> adapter;
     RelativeLayout activity_main;
