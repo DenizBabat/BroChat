@@ -5,27 +5,20 @@ package com.babat.deniz.brochat;
  */
 
 public class Profil {
-    private String User = new String();
     private String sender = new String();
-    private String reviever = new String();
+    private String reciever = new String();
     private ChatMessage cm = new ChatMessage();
 
-    public Profil(){}
+    public Profil(){
 
-    public Profil(String user, String sender, String reviever, ChatMessage cm) {
-        User = user;
+    }
+
+    public Profil(String sender, String reviever, ChatMessage cm) {
         this.sender = sender;
-        this.reviever = reviever;
+        this.reciever = reviever;
         this.cm = cm;
     }
 
-    public String getUser() {
-        return User;
-    }
-
-    public void setUser(String user) {
-        User = user;
-    }
 
     public String getSender() {
         return sender;
@@ -35,12 +28,12 @@ public class Profil {
         this.sender = sender;
     }
 
-    public String getReviever() {
-        return reviever;
+    public String getReciever() {
+        return reciever;
     }
 
-    public void setReviever(String reviever) {
-        this.reviever = reviever;
+    public void setReciever(String reciever) {
+        this.reciever = reciever;
     }
 
     public ChatMessage getCm() {
