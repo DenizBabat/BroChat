@@ -2,48 +2,36 @@ package com.babat.deniz.brochat;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.RelativeLayout;
 
+import com.firebase.ui.auth.AuthUI;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+
+import java.io.Serializable;
 
 /**
  * Created by deniz on 13.12.2017.
  */
 
-public class ProfilActivity extends AppCompatActivity {
-    Profil reciever = new Profil();
+public class ProfilActivity extends AppCompatActivity implements Parcelable{
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.profil);
+        setContentView(R.layout.profils);
 
-        Button p1 = findViewById(R.id.p1);
-        Button p2 = findViewById(R.id.p2);
 
-        p1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getBaseContext(), MessageActivity.class);
-                reciever.setSender(FirebaseAuth.getInstance().getCurrentUser().getDisplayName());
-                reciever.setReciever("p1");
-                intent.putExtra("extdata", (Parcelable) reciever);
-                startActivity(intent);
-            }
-        });
-
-        p2.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getBaseContext(), MessageActivity.class);
-                reciever.setSender(FirebaseAuth.getInstance().getCurrentUser().getDisplayName());
-                reciever.setReciever("p2");
-                intent.putExtra("extdata", (Parcelable) reciever);
-                startActivity(intent);
-            }
-        });
     }
 
 
@@ -51,4 +39,45 @@ public class ProfilActivity extends AppCompatActivity {
     public void onBackPressed() {
         moveTaskToBack(true);
     }
+
+
+    //--------------------------------------------------------------------------------------------------
+
+    /**
+     * Sign out requerments
+     * @param item
+     * @return
+     */
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        final RelativeLayout profil = findViewById(R.id.profil);
+        if(item.getItemId() == R.id.menu_sign_out)
+        {
+            AuthUI.getInstance().signOut(this).addOnCompleteListener(new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull Task<Void> task) {
+                    Snackbar.make(profil,"You have been signed out.", Snackbar.LENGTH_SHORT).show();
+                    finish();
+                }
+            });
+        }
+        return true;
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main_menu,menu);
+        return true;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+
+    }
+//--------------------------------------------------------------------------------------------------
 }

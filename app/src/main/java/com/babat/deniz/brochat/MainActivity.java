@@ -1,13 +1,17 @@
 package com.babat.deniz.brochat;
 
 import android.content.Intent;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.database.FirebaseListAdapter;
@@ -15,6 +19,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 
+import java.io.Serializable;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -22,7 +27,10 @@ public class MainActivity extends AppCompatActivity {
     //commit test
     private static int SIGN_IN_REQUEST_CODE = 1;
     private FirebaseListAdapter<ChatMessage> adapter;
-    RelativeLayout profil;
+    public RelativeLayout profils;
+    public Profil reciever = new Profil();
+    public Intent intent;
+    public Profil profil = new Profil();
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -31,11 +39,11 @@ public class MainActivity extends AppCompatActivity {
         {
             if(resultCode == RESULT_OK)
             {
-                Snackbar.make(profil,"Successfully signed in.Welcome!", Snackbar.LENGTH_SHORT).show();
+                Snackbar.make(profils,"Successfully signed in.Welcome!", Snackbar.LENGTH_SHORT).show();
 
             }
             else{
-                Snackbar.make(profil,"We couldn't sign you in.Please try again later", Snackbar.LENGTH_SHORT).show();
+                Snackbar.make(profils,"We couldn't sign you in.Please try again later", Snackbar.LENGTH_SHORT).show();
                 finish();
             }
         }
@@ -44,9 +52,9 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.profil);
+        setContentView(R.layout.profils);
 
-        profil = (RelativeLayout)findViewById(R.id.profil);
+        profils = (RelativeLayout)findViewById(R.id.profil);
 
 
         //Check if not sign-in then navigate Signin page
@@ -56,8 +64,24 @@ public class MainActivity extends AppCompatActivity {
         }
         else
         {
-            Snackbar.make(profil,"Welcome "+FirebaseAuth.getInstance().getCurrentUser().getDisplayName(),Snackbar.LENGTH_SHORT).show();
+            Snackbar.make(profils,"Welcome "+FirebaseAuth.getInstance().getCurrentUser().getDisplayName(), Snackbar.LENGTH_LONG).show();
         }
+
+        Button p1 = findViewById(R.id.p1);
+
+        p1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                intent = new Intent(getBaseContext(), MessageActivity.class);
+                String sender = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
+                String reciever = "p1";
+                profil.setReciever(reciever);
+                profil.setSender(sender);
+
+                intent.putExtra("btn", (Parcelable) profil);
+                startActivity(intent);
+            }
+        });
 
 
     }
@@ -76,7 +100,7 @@ public class MainActivity extends AppCompatActivity {
             AuthUI.getInstance().signOut(this).addOnCompleteListener(new OnCompleteListener<Void>() {
                 @Override
                 public void onComplete(@NonNull Task<Void> task) {
-                    Snackbar.make(profil,"You have been signed out.", Snackbar.LENGTH_SHORT).show();
+                    Snackbar.make(profils,"You have been signed out.", Snackbar.LENGTH_SHORT).show();
                     finish();
                 }
             });

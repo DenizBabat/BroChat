@@ -1,6 +1,7 @@
 package com.babat.deniz.brochat;
 
 
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -13,6 +14,7 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.text.format.DateFormat;
+import android.widget.Toast;
 
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.database.FirebaseListAdapter;
@@ -68,9 +70,15 @@ public class MessageActivity extends AppCompatActivity {
 
         activity_main = (RelativeLayout)findViewById(R.id.activity_main);
 
+        Intent i = getIntent();
+        Bundle bnd = i.getExtras();
+
+        Profil profil = bnd.getParcelable("btn");
+
+        Toast.makeText(getApplicationContext(), profil.getSender()+"<->"+profil.getReciever(), Toast.LENGTH_LONG).show();
 
 
-        //Add Emoji
+     /*   //Add Emoji
         emojiButton = (ImageView)findViewById(R.id.emoji_button);
         submitButton = (ImageView)findViewById(R.id.submit_button);
         emojiconEditText = (EmojiconEditText)findViewById(R.id.emojicon_edit_text);
@@ -88,12 +96,12 @@ public class MessageActivity extends AppCompatActivity {
         });
 
         //Load content
-        displayChatMessage();
+        displayChatMessage();*/
 
     }
 
 
-
+/*
     private void displayChatMessage() {
 
         ListView listOfMessage = (ListView)findViewById(R.id.list_of_message);
@@ -117,5 +125,5 @@ public class MessageActivity extends AppCompatActivity {
             }
         };
         listOfMessage.setAdapter(adapter);
-    }
+    }*/
 }

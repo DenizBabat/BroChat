@@ -13,9 +13,15 @@ public class Profil {
 
     }
 
-    public Profil(String sender, String reviever, ChatMessage cm) {
+    public Profil(String sender, String reciever)
+    {
         this.sender = sender;
-        this.reciever = reviever;
+        this.reciever = reciever;
+    }
+
+    public Profil(String sender, String reciever, ChatMessage cm) {
+        this.sender = sender;
+        this.reciever = reciever;
         this.cm = cm;
     }
 
