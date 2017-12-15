@@ -24,7 +24,7 @@ import java.io.Serializable;
  * Created by deniz on 13.12.2017.
  */
 
-public class ProfilActivity extends AppCompatActivity implements Parcelable{
+public class ProfilActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,14 +70,5 @@ public class ProfilActivity extends AppCompatActivity implements Parcelable{
         return true;
     }
 
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-
-    }
 //--------------------------------------------------------------------------------------------------
 }

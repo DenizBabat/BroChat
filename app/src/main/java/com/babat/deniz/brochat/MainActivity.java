@@ -26,7 +26,7 @@ public class MainActivity extends AppCompatActivity {
 
     //commit test
     private static int SIGN_IN_REQUEST_CODE = 1;
-    private FirebaseListAdapter<ChatMessage> adapter;
+    private FirebaseListAdapter<Profil> adapter;
     public RelativeLayout profils;
     public Profil reciever = new Profil();
     public Intent intent;
@@ -68,17 +68,32 @@ public class MainActivity extends AppCompatActivity {
         }
 
         Button p1 = findViewById(R.id.p1);
+        Button p2 = findViewById(R.id.p2);
 
         p1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 intent = new Intent(getBaseContext(), MessageActivity.class);
                 String sender = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
-                String reciever = "p1";
+                String reciever = "deniz";
+                profil.setReciever(reciever);
+                profil.setSender(sender);
+               // Toast.makeText(getBaseContext(), "++++geldi+++++",Toast.LENGTH_LONG).show();
+                intent.putExtra("btn", (Parcelable) profil);
+                startActivity(intent);
+            }
+        });
+
+        p2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                intent = new Intent(getBaseContext(), MessageActivity.class);
+                String sender = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
+                String reciever = "babat";
                 profil.setReciever(reciever);
                 profil.setSender(sender);
 
-                intent.putExtra("btn", (Parcelable) profil);
+                intent.putExtra("btn", profil);
                 startActivity(intent);
             }
         });
