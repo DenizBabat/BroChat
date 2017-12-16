@@ -2,6 +2,7 @@ package com.babat.deniz.brochat;
 
 
 import android.content.Intent;
+import android.os.Parcelable;
 import android.print.PrinterId;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
@@ -45,7 +46,7 @@ public class MessageActivity extends AppCompatActivity {
     ChatMessage cm = new ChatMessage();
     Profil profil = new Profil();
 
-
+    private final String user = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +59,7 @@ public class MessageActivity extends AppCompatActivity {
             Intent intent = getIntent();
 
             profil = (Profil) intent.getExtras().getParcelable("btn");
+
 
             //Profilden profile giden messagelerı kontorl etmek için ekrana bir toast messaji debug i yapiliyor burada.
             //Toast.makeText(getApplicationContext(), profil.getSender() + "<->" + profil.getReciever(), Toast.LENGTH_LONG).show();
@@ -96,7 +98,7 @@ public class MessageActivity extends AppCompatActivity {
 
     private void displayChatMessage() {
 
-        final String user = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
+        //final String user = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
 
         ListView listOfMessage = (ListView)findViewById(R.id.list_of_message);
 
@@ -113,22 +115,20 @@ public class MessageActivity extends AppCompatActivity {
                 messageUser = (TextView) v.findViewById(R.id.message_user);
                 messageTime = (TextView) v.findViewById(R.id.message_time);
 
+
                 String reciever = prof.getReciever();
 
-                if (user.equals(reciever)) {
+                if (user.equals(reciever) && user.equals(prof.getUser())) {
 
                     messageText.setText(prof.getCm().getMessageText());
                     messageUser.setText(prof.getCm().getMessageUser());
                     messageTime.setText(DateFormat.format("dd-MM-yyyy (HH:mm:ss)", prof.getCm().getMessageTime()));
 
-                }else {
-                    messageText.setText(null);
-                    messageUser.setText(null);
-                    messageTime.setText(null);
                 }
 
             }
         };
+
         listOfMessage.setAdapter(adapter);
 
     }

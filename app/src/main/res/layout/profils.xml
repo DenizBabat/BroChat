@@ -42,13 +42,18 @@
             android:id="@+id/p1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="profil 1" />
+            android:text="deniz" />
 
         <Button
             android:id="@+id/p2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="profil 2" />
+            android:text="babat" />
 
+        <Button
+            android:id="@+id/p3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="ahmet" />
     </LinearLayout>
 </RelativeLayout>

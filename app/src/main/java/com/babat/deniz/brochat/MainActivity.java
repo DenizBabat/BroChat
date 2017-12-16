@@ -6,10 +6,13 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
@@ -18,8 +21,14 @@ import com.firebase.ui.database.FirebaseListAdapter;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -31,6 +40,8 @@ public class MainActivity extends AppCompatActivity {
     public Profil reciever = new Profil();
     public Intent intent;
     public Profil profil = new Profil();
+    ArrayList<String> usernamelist = new ArrayList<>();
+    private DatabaseReference userlistReference;
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -69,6 +80,35 @@ public class MainActivity extends AppCompatActivity {
 
         Button p1 = findViewById(R.id.p1);
         Button p2 = findViewById(R.id.p2);
+        Button p3 = findViewById(R.id.p3);
+
+        DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
+
+        DatabaseReference usersdRef = rootRef.child("users");
+
+        ValueEventListener eventListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot ds : dataSnapshot.getChildren()) {
+
+                    String name = ds.child("name").getValue(String.class);
+
+                    Log.d("TAG", name);
+
+                    usernamelist.add(name);
+                    System.out.println("deniz-----------------babat");
+
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        };
+
+
+
 
         p1.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -78,6 +118,7 @@ public class MainActivity extends AppCompatActivity {
                 String reciever = "deniz";
                 profil.setReciever(reciever);
                 profil.setSender(sender);
+                profil.setUser(sender);
                // Toast.makeText(getBaseContext(), "++++geldi+++++",Toast.LENGTH_LONG).show();
                 intent.putExtra("btn", (Parcelable) profil);
                 startActivity(intent);
@@ -90,8 +131,24 @@ public class MainActivity extends AppCompatActivity {
                 intent = new Intent(getBaseContext(), MessageActivity.class);
                 String sender = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
                 String reciever = "babat";
+                profil.setUser(sender);
+                profil.setSender(sender);
+                profil.setReciever(reciever);
+
+                intent.putExtra("btn", profil);
+                startActivity(intent);
+            }
+        });
+
+        p3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplication(),MessageActivity.class);
+                String sender = "Ahmet";
+                String reciever = "kazım";
                 profil.setReciever(reciever);
                 profil.setSender(sender);
+                profil.setUser(sender);
 
                 intent.putExtra("btn", profil);
                 startActivity(intent);

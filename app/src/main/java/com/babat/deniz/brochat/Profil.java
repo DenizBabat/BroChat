@@ -10,6 +10,9 @@ import java.io.Serializable;
  */
 
 public class Profil implements Parcelable{
+
+
+    public String user = new String();
     private String sender = new String();
     private String reciever = new String();
     private ChatMessage cm = new ChatMessage();
@@ -32,6 +35,7 @@ public class Profil implements Parcelable{
 
 
     protected Profil(Parcel in) {
+        user = in.readString();
         sender = in.readString();
         reciever = in.readString();
     }
@@ -71,6 +75,13 @@ public class Profil implements Parcelable{
     public void setCm(ChatMessage cm) {
         this.cm = cm;
     }
+    public String getUser() {
+        return user;
+    }
+
+    public void setUser(String user) {
+        this.user = user;
+    }
 
     @Override
     public int describeContents() {
@@ -79,7 +90,9 @@ public class Profil implements Parcelable{
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(user);
         dest.writeString(sender);
         dest.writeString(reciever);
     }
+
 }
