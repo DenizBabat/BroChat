@@ -24,6 +24,7 @@ import com.firebase.ui.database.FirebaseListAdapter;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import hani.momanii.supernova_emoji_library.Actions.EmojIconActions;
@@ -48,10 +49,18 @@ public class MessageActivity extends AppCompatActivity {
 
     private final String user = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
 
+    private String MESSAGE = "MESSAGES";
+    FirebaseDatabase db;
+    DatabaseReference dbRef;
+    DatabaseReference dbRefNew;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+
+
 
         activity_main = (RelativeLayout)findViewById(R.id.activity_main);
 
@@ -62,7 +71,7 @@ public class MessageActivity extends AppCompatActivity {
 
 
             //Profilden profile giden messagelerı kontorl etmek için ekrana bir toast messaji debug i yapiliyor burada.
-            //Toast.makeText(getApplicationContext(), profil.getSender() + "<->" + profil.getReciever(), Toast.LENGTH_LONG).show();
+           Toast.makeText(getApplicationContext(), profil.getSender() + "<->" + profil.getReciever(), Toast.LENGTH_LONG).show();
         }catch (Exception e){
             Log.e("Err", e.getMessage());
         }
@@ -82,7 +91,13 @@ public class MessageActivity extends AppCompatActivity {
                 cm =new ChatMessage(emojiconEditText.getText().toString(),FirebaseAuth.getInstance().getCurrentUser().getEmail());
                 profil.setCm(cm);
 
-                FirebaseDatabase.getInstance().getReference().push().setValue(profil);
+                db = FirebaseDatabase.getInstance();
+                DatabaseReference dbRef = db.getReference(MESSAGE);
+                String key = dbRef.push().getKey();
+                DatabaseReference dbRefYeni = db.getReference(MESSAGE+"/"+key);
+                dbRefYeni.setValue(profil);
+
+               // FirebaseDatabase.getInstance().getReference().push().setValue(profil);
 
                 emojiconEditText.setText("");
                 emojiconEditText.requestFocus();
@@ -118,7 +133,8 @@ public class MessageActivity extends AppCompatActivity {
 
                 String reciever = prof.getReciever();
 
-                if (user.equals(reciever) && user.equals(prof.getUser())) {
+                //if (user.equals(reciever) || user.equals(prof.getUser()))
+                {
 
                     messageText.setText(prof.getCm().getMessageText());
                     messageUser.setText(prof.getCm().getMessageUser());

@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/profil"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/profil"
-    tools:context="com.babat.deniz.brochat.ProfilActivity">
+    tools:context="com.babat.deniz.brochat.MainActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -23,22 +22,41 @@
                 android:id="@+id/searchbtn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginStart="220dp"
+                android:layout_toEndOf="@+id/refresh"
                 android:background="@android:drawable/ic_search_category_default" />
 
             <EditText
                 android:id="@+id/editText3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
-                android:layout_toStartOf="@+id/searchbtn"
+                android:layout_alignBaseline="@+id/searchbtn"
+                android:layout_alignBottom="@+id/searchbtn"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="59dp"
                 android:ems="10"
                 android:inputType="textPersonName"
                 android:text="Search Profil" />
 
+            <Button
+                android:id="@+id/refresh"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/editText3"
+                android:layout_alignParentStart="true"
+                android:layout_toStartOf="@+id/editText3"
+                android:onClick="RefreshOnClick"
+                android:text="@string/Refresh" />
+
         </RelativeLayout>
 
-        <Button
+        <ListView
+            android:id="@+id/profilview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <!--      <Button
             android:id="@+id/p1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -54,6 +72,6 @@
             android:id="@+id/p3"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="ahmet" />
+            android:text="ahmet" /> -->
     </LinearLayout>
 </RelativeLayout>
