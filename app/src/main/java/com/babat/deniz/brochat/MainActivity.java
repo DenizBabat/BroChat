@@ -45,7 +45,6 @@ public class MainActivity extends AppCompatActivity {
     public Intent intent;
     public Profil profil = new Profil();
     private  int RESULT;
-    Context context;
 
     private String PROFIL = "PROFILS";
     FirebaseDatabase db;
@@ -58,6 +57,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        //önceden kayıt varsa tekrar kayıt oluşturulamıyor.
         if(requestCode == SIGN_IN_REQUEST_CODE)
         {
             RESULT = resultCode;
@@ -91,19 +91,6 @@ public class MainActivity extends AppCompatActivity {
             Snackbar.make(profils,"Welcome "+FirebaseAuth.getInstance().getCurrentUser().getDisplayName(), Snackbar.LENGTH_LONG).show();
 
         }
-
-
-        /*
-        //dinamic button ekleme bölümü NOT bu bölümü silme
-        Button button = new Button(this);
-        button.setText(" Button Programmatically ");
-        button.setTextSize(20);
-        button.setGravity(Gravity.CENTER);
-
-        profils.addView(button);
-        */
-
-
 
 
     }
@@ -203,19 +190,6 @@ public class MainActivity extends AppCompatActivity {
                         String prf = key.getValue().toString();
                         if (!prf.equals(temp)) {
                             dbProfilList.add(prf);
-                            /*button.setText(prf);
-                            button.setTextSize(40);
-                            button.setGravity(Gravity.CENTER);
-                            button.setId(prf.hashCode());
-                            button.setEnabled(true);
-
-                            profils.addView(button);
-                            */
-                           /* StringTokenizer token  = new StringTokenizer(prf,"/");
-                            String user = token.nextToken();
-                            String email = token.nextToken();
-
-                          //  mydb.add(user,email);*/
 
                             addflag[0] = true;
                         }

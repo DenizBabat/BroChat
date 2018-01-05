@@ -17,6 +17,25 @@ public class Profil implements Parcelable{
     private String reciever = new String();
     private ChatMessage cm = new ChatMessage();
 
+    private String pk1 = new String();
+    private String pk2 = new String();
+
+    public String getPk1() {
+        return pk1;
+    }
+
+    public void setPk1(String pk1) {
+        this.pk1 = pk1;
+    }
+
+    public String getPk2() {
+        return pk2;
+    }
+
+    public void setPk2(String pk2) {
+        this.pk2 = pk2;
+    }
+
     public Profil(){
 
     }

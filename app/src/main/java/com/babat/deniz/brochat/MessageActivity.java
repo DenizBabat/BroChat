@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
@@ -24,8 +25,13 @@ import com.firebase.ui.database.FirebaseListAdapter;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
 
 import hani.momanii.supernova_emoji_library.Actions.EmojIconActions;
 import hani.momanii.supernova_emoji_library.Helper.EmojiconEditText;
@@ -37,11 +43,12 @@ public class MessageActivity extends AppCompatActivity {
     //commit test
     private static int SIGN_IN_REQUEST_CODE = 1;
     private FirebaseListAdapter<Profil> adapter;
+    private ArrayAdapter<Profil> profAdap;
     RelativeLayout activity_main;
 
     //Add Emojicon
     EmojiconEditText emojiconEditText;
-    ImageView emojiButton,submitButton;
+    ImageView emojiButton, submitButton;
     EmojIconActions emojIconActions;
 
     ChatMessage cm = new ChatMessage();
@@ -60,44 +67,45 @@ public class MessageActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
 
-
-
-        activity_main = (RelativeLayout)findViewById(R.id.activity_main);
+        activity_main = (RelativeLayout) findViewById(R.id.activity_main);
 
         try {
             Intent intent = getIntent();
 
             profil = (Profil) intent.getExtras().getParcelable("btn");
 
+            profil.setPk1(profil.getSender() + profil.getReciever());
+            profil.setPk2(profil.getReciever() + profil.getSender());
+
 
             //Profilden profile giden messagelerı kontorl etmek için ekrana bir toast messaji debug i yapiliyor burada.
-           Toast.makeText(getApplicationContext(), profil.getSender() + "<->" + profil.getReciever(), Toast.LENGTH_LONG).show();
-        }catch (Exception e){
+            Toast.makeText(getApplicationContext(), profil.getSender() + "<->" + profil.getReciever(), Toast.LENGTH_LONG).show();
+        } catch (Exception e) {
             Log.e("Err", e.getMessage());
         }
 
 
         //Add Emoji
-        emojiButton = (ImageView)findViewById(R.id.emoji_button);
-        submitButton = (ImageView)findViewById(R.id.submit_button);
-        emojiconEditText = (EmojiconEditText)findViewById(R.id.emojicon_edit_text);
-        emojIconActions = new EmojIconActions(getApplicationContext(),activity_main,emojiButton,emojiconEditText);
+        emojiButton = (ImageView) findViewById(R.id.emoji_button);
+        submitButton = (ImageView) findViewById(R.id.submit_button);
+        emojiconEditText = (EmojiconEditText) findViewById(R.id.emojicon_edit_text);
+        emojIconActions = new EmojIconActions(getApplicationContext(), activity_main, emojiButton, emojiconEditText);
         emojIconActions.ShowEmojicon();
 
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                cm =new ChatMessage(emojiconEditText.getText().toString(),FirebaseAuth.getInstance().getCurrentUser().getEmail());
+                cm = new ChatMessage(emojiconEditText.getText().toString(), FirebaseAuth.getInstance().getCurrentUser().getEmail());
                 profil.setCm(cm);
 
-                db = FirebaseDatabase.getInstance();
-                DatabaseReference dbRef = db.getReference(MESSAGE);
+              //  db = FirebaseDatabase.getInstance();
+             //   DatabaseReference dbRef = db.getReference(MESSAGE);
                 String key = dbRef.push().getKey();
-                DatabaseReference dbRefYeni = db.getReference(MESSAGE+"/"+key);
-                dbRefYeni.setValue(profil);
+                DatabaseReference dbRefNew  = db.getReference(MESSAGE + "/" + key);
+                dbRefNew.setValue(profil);
 
-               // FirebaseDatabase.getInstance().getReference().push().setValue(profil);
+                // FirebaseDatabase.getInstance().getReference().push().setValue(profil);
 
                 emojiconEditText.setText("");
                 emojiconEditText.requestFocus();
@@ -110,42 +118,36 @@ public class MessageActivity extends AppCompatActivity {
     }
 
 
-
     private void displayChatMessage() {
 
-        //final String user = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
+       /* final String user = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
+        final String reciever = profil.getReciever();
+        final String combine = user + reciever;
 
-        ListView listOfMessage = (ListView)findViewById(R.id.list_of_message);
+        final ListView listOfMessage = (ListView) findViewById(R.id.list_of_message);
+        final ArrayList<Profil> list =new ArrayList<>();
 
-        adapter = new FirebaseListAdapter<Profil>(this,Profil.class,
-                R.layout.list_item,
-                FirebaseDatabase.getInstance().getReference())
-        {
+        db = FirebaseDatabase.getInstance();
+        final DatabaseReference dbmessages = db.getReference(MESSAGE);
+
+        dbmessages.addValueEventListener(new ValueEventListener() {
             @Override
-            protected void populateView(View v, Profil prof, int position) {
-
-                //Get references to the views of list_item.xml
-                TextView messageText, messageUser, messageTime;
-                messageText = (EmojiconTextView) v.findViewById(R.id.message_text);
-                messageUser = (TextView) v.findViewById(R.id.message_user);
-                messageTime = (TextView) v.findViewById(R.id.message_time);
-
-
-                String reciever = prof.getReciever();
-
-                //if (user.equals(reciever) || user.equals(prof.getUser()))
-                {
-
-                    messageText.setText(prof.getCm().getMessageText());
-                    messageUser.setText(prof.getCm().getMessageUser());
-                    messageTime.setText(DateFormat.format("dd-MM-yyyy (HH:mm:ss)", prof.getCm().getMessageTime()));
-
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Iterable<DataSnapshot> keys = dataSnapshot.getChildren();
+                for (DataSnapshot key:keys){
+                    list.add((Profil) key.getValue());
                 }
 
+              //  Toast.makeText(getApplicationContext(), list.get(0).getCm().getMessageText(), Toast.LENGTH_SHORT).show();
             }
-        };
 
-        listOfMessage.setAdapter(adapter);
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
 
+            }
+        });
+
+
+        listOfMessage.setAdapter(adapter);*/
     }
 }
