@@ -1,6 +1,7 @@
 package com.babat.deniz.brochat;
 
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Parcelable;
 import android.print.PrinterId;
@@ -12,6 +13,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Adapter;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -42,9 +44,10 @@ public class MessageActivity extends AppCompatActivity {
 
     //commit test
     private static int SIGN_IN_REQUEST_CODE = 1;
-    private FirebaseListAdapter<Profil> adapter;
+
     private ArrayAdapter<Profil> profAdap;
     RelativeLayout activity_main;
+    Context context = MessageActivity.this;
 
     //Add Emojicon
     EmojiconEditText emojiconEditText;
@@ -55,11 +58,14 @@ public class MessageActivity extends AppCompatActivity {
     Profil profil = new Profil();
 
     private final String user = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
+    private final String email = FirebaseAuth.getInstance().getCurrentUser().getEmail();
 
     private String MESSAGE = "MESSAGES";
     FirebaseDatabase db;
     DatabaseReference dbRef;
     DatabaseReference dbRefNew;
+    FirebaseListAdapter<Profil> adapter;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,7 +73,12 @@ public class MessageActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
 
+
         activity_main = (RelativeLayout) findViewById(R.id.activity_main);
+
+
+
+        //Toast.makeText(getApplicationContext(), "****"+FirebaseAuth.getInstance().getCurrentUser().getEmail(), Toast.LENGTH_SHORT).show();
 
         try {
             Intent intent = getIntent();
@@ -96,11 +107,11 @@ public class MessageActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                cm = new ChatMessage(emojiconEditText.getText().toString(), FirebaseAuth.getInstance().getCurrentUser().getEmail());
+                cm = new ChatMessage(emojiconEditText.getText().toString(), email);
                 profil.setCm(cm);
 
-              //  db = FirebaseDatabase.getInstance();
-             //   DatabaseReference dbRef = db.getReference(MESSAGE);
+                db = FirebaseDatabase.getInstance();
+                DatabaseReference dbRef = db.getReference(MESSAGE);
                 String key = dbRef.push().getKey();
                 DatabaseReference dbRefNew  = db.getReference(MESSAGE + "/" + key);
                 dbRefNew.setValue(profil);
@@ -120,34 +131,30 @@ public class MessageActivity extends AppCompatActivity {
 
     private void displayChatMessage() {
 
-       /* final String user = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
-        final String reciever = profil.getReciever();
-        final String combine = user + reciever;
-
-        final ListView listOfMessage = (ListView) findViewById(R.id.list_of_message);
-        final ArrayList<Profil> list =new ArrayList<>();
-
-        db = FirebaseDatabase.getInstance();
-        final DatabaseReference dbmessages = db.getReference(MESSAGE);
-
-        dbmessages.addValueEventListener(new ValueEventListener() {
+        ListView listOfMessage = (ListView)findViewById(R.id.list_of_message);
+        adapter = new FirebaseListAdapter<Profil>(this,Profil.class,
+                R.layout.list_item,
+                FirebaseDatabase.getInstance().getReference(MESSAGE))
+        {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                Iterable<DataSnapshot> keys = dataSnapshot.getChildren();
-                for (DataSnapshot key:keys){
-                    list.add((Profil) key.getValue());
-                }
+            protected void populateView(View v, Profil prf, int position) {
 
-              //  Toast.makeText(getApplicationContext(), list.get(0).getCm().getMessageText(), Toast.LENGTH_SHORT).show();
-            }
+                //Get references to the views of list_item.xml
+                TextView messageText, messageUser, messageTime;
+                messageText = (EmojiconTextView) v.findViewById(R.id.message_text);
+                messageUser = (TextView) v.findViewById(R.id.message_user);
+                messageTime = (TextView) v.findViewById(R.id.message_time);
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
+                messageText.setText(prf.getCm().getMessageText());
+                messageUser.setText(prf.getCm().getMessageUser());
+                messageTime.setText(DateFormat.format("dd-MM-yyyy (HH:mm:ss)", prf.getCm().getMessageTime()));
+
+
+
+                Toast.makeText(getApplicationContext(),messageText.toString(),Toast.LENGTH_SHORT).show();
 
             }
-        });
-
-
-        listOfMessage.setAdapter(adapter);*/
+        };
+        listOfMessage.setAdapter(adapter);
     }
 }

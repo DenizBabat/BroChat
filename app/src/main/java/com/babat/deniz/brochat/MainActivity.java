@@ -42,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
     private static int SIGN_IN_REQUEST_CODE = 1;
     public RelativeLayout profils;
     public Profil reciever = new Profil();
+    private String user = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
     public Intent intent;
     public Profil profil = new Profil();
     private  int RESULT;
@@ -210,6 +211,7 @@ public class MainActivity extends AppCompatActivity {
 
                             profil.setSender(sender);
                             profil.setReciever(reciever);
+                            profil.setUser(user);
 
                             intent.putExtra("btn", profil);
                             //Toast.makeText(getApplicationContext(),sender,Toast.LENGTH_SHORT).show();
